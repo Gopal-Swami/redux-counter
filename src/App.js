@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
-
+import Buttons from './component/Buttons';
+import { useDispatch, useSelector } from 'react-redux';
+import { increaseHandler } from './actions/countActions';
+import { decreaseHandler } from './actions/countActions';
 function App() {
+  const dispatch = useDispatch();
+  const [count, setCounter] = useState(0);
+
+  const counter = useSelector((state) => state.count);
+  const { count: countFromReducer } = counter;
+  const increaseCounter = () => {
+    dispatch(increaseHandler(count));
+  };
+
+  const decreaseCounter = () => {
+    dispatch(decreaseHandler(count));
+  };
+
+  useEffect(() => {
+    setCounter(countFromReducer ? countFromReducer : 0);
+  }, [countFromReducer]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="result">{count}</div>
+      <div className="actions">
+        <Buttons className="action" icon="+" action={increaseCounter} />
+        <Buttons className="action" icon="-" action={decreaseCounter} />
+      </div>
     </div>
   );
 }
